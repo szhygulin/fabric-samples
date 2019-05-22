@@ -67,6 +67,7 @@ services:
 
   chaincode:
     container_name: chaincode
+    #image: szhygulin/es-chaincode:latest
     image: hyperledger/fabric-ccenv
     tty: true
     environment:
