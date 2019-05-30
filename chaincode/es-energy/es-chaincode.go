@@ -113,18 +113,18 @@ func send(stub shim.ChaincodeStubInterface, args []string) (string, error) {
     result, err2 := set(stub, []string{args[0], new_sender_balance})
 
     recipient_value, err3 := get(stub, []string{args[1]})
-    recipient_value_int, err := strconv.ParseInt(recipient_value, 10, 64)
-    if err != nil {
-            return "", fmt.Errorf("Failed to convert asset to int64: %s with error: %s", recipient_value, err)
-    }
     if err3 == nil {
+            recipient_value_int, err := strconv.ParseInt(recipient_value, 10, 64)
+            if err != nil {
+                    return "", fmt.Errorf("Failed to convert asset to int64: %s with error: %s", recipient_value, err)
+            }
             new_recipient_balance_int := recipient_value_int + amount_int
             new_recipient_balance := strconv.FormatInt(new_recipient_balance_int,10)
             result, err2 = set(stub, []string{args[1], new_recipient_balance})
     } else {
             result, err2 = set(stub, []string{args[1], args[2]})
     }
-
+    
     return result, err2
 }
 

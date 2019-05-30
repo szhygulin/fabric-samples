@@ -62,7 +62,7 @@ func (am *Exchange) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
         if usdSendResponse.Status != shim.OK {
             return shim.Error(usdSendResponse.Message)
         }
-        eneSendGetArgs := util.ArrayToChaincodeArgs("send", args[2], args[0], args[3])
+        eneSendGetArgs := util.ToChaincodeArgs("send", args[2], args[0], args[3])
         eneSendResponse := stub.InvokeChaincode("EnergyAsset", eneSendGetArgs, "myc")
         if eneSendResponse.Status != shim.OK {
             return shim.Error(eneSendResponse.Message)
