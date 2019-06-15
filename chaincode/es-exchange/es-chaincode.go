@@ -6,6 +6,7 @@ import (
     "github.com/hyperledger/fabric/common/util"
     "github.com/hyperledger/fabric/core/chaincode/shim"
     "github.com/hyperledger/fabric/protos/peer"
+    "github.com/google/easypki/pkg/easypki"
 )
 
 // SimpleAsset implements a simple chaincode to manage an asset
