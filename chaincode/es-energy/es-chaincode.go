@@ -142,9 +142,9 @@ func burn(stub shim.ChaincodeStubInterface, args []string) (string, error) {
     if err1 != nil {
             return "", fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err1)
     }
-    user_value_int, err := strconv.ParseInt(sender_value, 10, 64)
+    user_value_int, err := strconv.ParseInt(user_value, 10, 64)
     if err != nil {
-            return "", fmt.Errorf("Failed to convert asset to int64: %s with error: %s", sender_value, err)
+            return "", fmt.Errorf("Failed to convert asset to int64: %s with error: %s", user_value, err)
     }
     amount_int, err := strconv.ParseInt(args[1], 10, 64)
     if err != nil {
@@ -170,9 +170,9 @@ func generate(stub shim.ChaincodeStubInterface, args []string) (string, error) {
     if err1 != nil {
             return "", fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err1)
     }
-    user_value_int, err := strconv.ParseInt(sender_value, 10, 64)
+    user_value_int, err := strconv.ParseInt(user_value, 10, 64)
     if err != nil {
-            return "", fmt.Errorf("Failed to convert asset to int64: %s with error: %s", sender_value, err)
+            return "", fmt.Errorf("Failed to convert asset to int64: %s with error: %s", user_value, err)
     }
     amount_int, err := strconv.ParseInt(args[1], 10, 64)
     if err != nil {
