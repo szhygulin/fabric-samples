@@ -44,7 +44,11 @@ func (t *EnergyAsset) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
             result, err = set(stub, args)
     } else if fn == "send" {
             result, err = send(stub, args)
-    } else { // assume 'get' even if fn is nil
+    } else if fn == "burn" {
+            result, err = burn(stub, args)
+    } else if fn == "generate" {
+            result, err = generate(stub, args)
+    } else{ // assume 'get' even if fn is nil
             result, err = get(stub, args)
     }
     if err != nil {
@@ -125,6 +129,58 @@ func send(stub shim.ChaincodeStubInterface, args []string) (string, error) {
             result, err2 = set(stub, []string{args[1], args[2]})
     }
     
+    return result, err2
+}
+
+// burn(id, amount)
+func burn(stub shim.ChaincodeStubInterface, args []string) (string, error) {
+    if len(args) != 2 {
+            return "", fmt.Errorf("Incorrect arguments. Expecting a key and a value")
+    }
+    
+    user_value, err1 := get(stub, []string{args[0]})
+    if err1 != nil {
+            return "", fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err1)
+    }
+    user_value_int, err := strconv.ParseInt(sender_value, 10, 64)
+    if err != nil {
+            return "", fmt.Errorf("Failed to convert asset to int64: %s with error: %s", sender_value, err)
+    }
+    amount_int, err := strconv.ParseInt(args[1], 10, 64)
+    if err != nil {
+            return "", fmt.Errorf("Failed to convert amount to int64: %s with error: %s", args[1], err)
+    }
+    if user_value_int < amount_int {
+            return "", fmt.Errorf("User's asset value on %s is less than intended to burn", args[0])
+    }
+
+    new_user_balance_int := user_value_int - amount_int
+    new_user_balance := strconv.FormatInt(new_user_balance_int, 10)
+    result, err2 := set(stub, []string{args[0], new_user_balance})
+    return result, err2
+}
+
+// generate(id, amount)
+func generate(stub shim.ChaincodeStubInterface, args []string) (string, error) {
+    if len(args) != 2 {
+            return "", fmt.Errorf("Incorrect arguments. Expecting a key and a value")
+    }
+    
+    user_value, err1 := get(stub, []string{args[0]})
+    if err1 != nil {
+            return "", fmt.Errorf("Failed to get asset: %s with error: %s", args[0], err1)
+    }
+    user_value_int, err := strconv.ParseInt(sender_value, 10, 64)
+    if err != nil {
+            return "", fmt.Errorf("Failed to convert asset to int64: %s with error: %s", sender_value, err)
+    }
+    amount_int, err := strconv.ParseInt(args[1], 10, 64)
+    if err != nil {
+            return "", fmt.Errorf("Failed to convert amount to int64: %s with error: %s", args[1], err)
+    }
+    new_user_balance_int := user_value_int + amount_int
+    new_user_balance := strconv.FormatInt(new_user_balance_int, 10)
+    result, err2 := set(stub, []string{args[0], new_user_balance})
     return result, err2
 }
 
