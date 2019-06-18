@@ -3,6 +3,8 @@ package main
 import (
     "fmt"
     "strconv"
+    "time"
+    "encoding/json"
     "github.com/hyperledger/fabric/core/chaincode/shim"
     "github.com/hyperledger/fabric/protos/peer"
 )
@@ -44,6 +46,8 @@ func (t *USDAsset) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
             result, err = set(stub, args)
     } else if fn == "send" {
             result, err = send(stub, args)
+    } else if fn == "keys" {
+            return t.keys(stub, args)
     } else { // assume 'get' even if fn is nil
             result, err = get(stub, args)
     }
@@ -126,6 +130,51 @@ func send(stub shim.ChaincodeStubInterface, args []string) (string, error) {
     }
 
     return result, err2
+}
+
+func (t *USDAsset) keys(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+	if len(args) > 0 {
+		return shim.Error("keys operation must not include any arguments")
+	}
+	startKey := ""
+	endKey := ""
+
+	//sleep needed to test peer's timeout behavior when using iterators
+	stime := 1000
+	//if len(args) > 2 {
+	//	stime, _ = strconv.Atoi(args[2])
+	//}
+
+	keysIter, err := stub.GetStateByRange(startKey, endKey)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("keys operation failed. Error accessing state: %s", err))
+	}
+	defer keysIter.Close()
+
+	var keys []string
+	for keysIter.HasNext() {
+		//if sleeptime is specied, take a nap
+		if stime > 0 {
+			time.Sleep(time.Duration(stime) * time.Millisecond)
+		}
+
+		response, iterErr := keysIter.Next()
+		if iterErr != nil {
+			return shim.Error(fmt.Sprintf("keys operation failed. Error accessing state: %s", err))
+		}
+		keys = append(keys, response.Key)
+	}
+
+	for key, value := range keys {
+		fmt.Printf("key %d contains %s\n", key, value)
+	}
+
+	jsonKeys, err := json.Marshal(keys)
+	if err != nil {
+		return shim.Error(fmt.Sprintf("keys operation failed. Error marshaling JSON: %s", err))
+	}
+
+	return shim.Success(jsonKeys)
 }
 
 
