@@ -140,7 +140,7 @@ func (t *USDAsset) keys(stub shim.ChaincodeStubInterface, args []string) peer.Re
 	endKey := ""
 
 	//sleep needed to test peer's timeout behavior when using iterators
-	stime := 1000
+	stime := 100
 	//if len(args) > 2 {
 	//	stime, _ = strconv.Atoi(args[2])
 	//}
