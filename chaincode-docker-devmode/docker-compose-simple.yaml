@@ -87,3 +87,10 @@ services:
     depends_on:
       - orderer
       - peer
+
+  http_server:
+    container_name: http_server
+    image: http_server
+    tty: true
+    command: python3 pythonServer.py
+
