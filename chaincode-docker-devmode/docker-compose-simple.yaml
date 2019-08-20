@@ -91,6 +91,9 @@ services:
   http_server:
     container_name: http_server
     image: http_server
+    ports: 
+      - 8000:8000
     tty: true
+    working_dir: /pythonServer
     command: python3 pythonServer.py
 
