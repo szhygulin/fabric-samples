@@ -28,7 +28,7 @@ func (t *USDAsset) Init(stub shim.ChaincodeStubInterface) peer.Response {
     // We store the key and the value on the ledger
     err := stub.PutState("central_company", []byte(0))
     if err != nil {
-            return shim.Error(fmt.Sprintf("Failed to create asset: %s", args[0]))
+            return shim.Error(fmt.Sprintf("Failed to create asset: %s", args[string(0)]))
     }
     return shim.Success(nil)
 }

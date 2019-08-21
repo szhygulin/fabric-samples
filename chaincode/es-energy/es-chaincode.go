@@ -26,7 +26,7 @@ func (t *EnergyAsset) Init(stub shim.ChaincodeStubInterface) peer.Response {
     // Set up any variables or assets here by calling stub.PutState()
 
     // We store the key and the value on the ledger
-    err := stub.PutState("central_company", []byte(1000000000))
+    err := stub.PutState("central_company", []byte(string(1000000000)))
     if err != nil {
             return shim.Error(fmt.Sprintf("Failed to create asset: %s", args[0]))
     }
