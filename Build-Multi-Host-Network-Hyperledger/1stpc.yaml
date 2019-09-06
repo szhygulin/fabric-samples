@@ -1,0 +1,24 @@
+version: '3.3'
+
+services:
+  ca.example.com:
+    container_name: ca.example.com
+    image: hyperledger/fabric-ca
+    networks: 
+      my-net: {}
+    ports:
+      - 7054:7054 
+    environment: 
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server 
+      - FABRIC_CA_SERVER_CA_NAME=ca.example.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem 
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/2ce5b07278b31048eb7682f21469f04c27eca236ce45c3206dc4703dff871a64_sk 
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=hyp-net hyperledger/fabric-ca
+    volumes: 
+      - ~/go/src/fabric-samples/Build-Multi-Host-Network-Hyperledger/crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config 
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+
+networks:
+  my-net:
+    external: false
+    driver: overlay

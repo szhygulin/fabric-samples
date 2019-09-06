@@ -25,7 +25,7 @@ func (am *Exchange) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 // Params - usd sender address, usd amount, ene sender address, ene amount
     if actionName == "exchange" {
         usdCCGetArgs := util.ToChaincodeArgs("get", args[0])
-        usdResponse := stub.InvokeChaincode("USDAsset", usdCCGetArgs, "myc")
+        usdResponse := stub.InvokeChaincode("USDAsset", usdCCGetArgs, "mychannel")
         if usdResponse.Status != shim.OK {
             return shim.Error(usdResponse.Message)
         }
@@ -38,7 +38,7 @@ func (am *Exchange) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
             return shim.Error(fmt.Sprintf("Failed to convert asset: %s with error: %s", usdResponse.Payload, err1))
         }
         eneCCGetArgs := util.ToChaincodeArgs("get", args[2])
-        eneResponse := stub.InvokeChaincode("EnergyAsset", eneCCGetArgs, "myc")
+        eneResponse := stub.InvokeChaincode("EnergyAsset", eneCCGetArgs, "mychannel")
         if eneResponse.Status != shim.OK {
             return shim.Error(eneResponse.Message)
         }
@@ -58,12 +58,12 @@ func (am *Exchange) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
         }
         fmt.Printf("thus far successful, %s, %s", args[1], args[3])
         usdSendGetArgs := util.ToChaincodeArgs("send", args[0], args[2], args[1])
-        usdSendResponse := stub.InvokeChaincode("USDAsset", usdSendGetArgs, "myc")
+        usdSendResponse := stub.InvokeChaincode("USDAsset", usdSendGetArgs, "mychannel")
         if usdSendResponse.Status != shim.OK {
             return shim.Error(usdSendResponse.Message)
         }
         eneSendGetArgs := util.ToChaincodeArgs("send", args[2], args[0], args[3])
-        eneSendResponse := stub.InvokeChaincode("EnergyAsset", eneSendGetArgs, "myc")
+        eneSendResponse := stub.InvokeChaincode("EnergyAsset", eneSendGetArgs, "mychannel")
         if eneSendResponse.Status != shim.OK {
             return shim.Error(eneSendResponse.Message)
         }
